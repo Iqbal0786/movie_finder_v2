@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #topDiv{
+            width: 100%;
+            height: 400px;
+            border: 1px solid red;
+            text-align: center;
+            color: white;
+            background-image: url("https://thumbs.gfycat.com/CraftyCircularBeauceron-max-1mb.gif");
+              background-repeat: repeat;
+        }
+      #movieDiv{
+          width: 400px;
+          height: 270px;
+          overflow: auto;
+          margin:auto;
+          border: 1px solid red;
+          border: none;
+      } 
+      #movieDiv > p{
+          font-size: 20px;
+          font-weight: bold;
+          font-family: monospace;
+          cursor: pointer;
+          width: 100%;
+          height: 70px;
+          box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+      }
+      input{
+          width: 400px;
+          height: 40px;
+      } 
+
+       /* show content div css */
+       #showContentDiv{
+            width: 80%;
+            height: 600px;
+            margin: auto;
+            /* border: 1px solid orangered; */
+            margin-top: 30px;
+            padding: 20px;
+            display: flex;
+            border-radius: 10px;
+            justify-content: space-between;
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+        }
+        #showContentDiv > img{
+            width: 40%;
+            height: 100%;
+            border-radius: 10px;
+        }
+      
+        #showContentDiv > #movieContent{
+            width: 58%;
+            height: 100%;
+            /* border: 1px solid green; */
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+        }
+        #movieText{
+            display: flex;
+            width: 100%;
+            height: 80px;
+            /* border: 1px solid black; */
+            justify-content: space-around;
+            color: rgb(78, 74, 74);
+            font-weight: normal;
+            font-family: sans-serif;
+            border-bottom: 1px solid gray;
+        }
+        #movieContent > p{
+            font-family: sans-serif;
+            font-weight: normal;
+            font-size: 25px;
+            color: #08345b;
+            padding-left:20px;
+            border-bottom: 1px solid gray;
+        }
+    
+        #tag{
+            margin-top: 2px;
+            margin-bottom: -20px;
+            font-size: 18px;
+            padding-left: 17px;
+            font-family: monospace;
+            font-style: italic;
+            color: rgb(8, 146, 8);
+        }
+        #aboutMovie{
+            font-family: sans-serif;
+            font-size: 20px;
+            font-weight: normal;
+            line-height: 25px;
+            padding: 15px;
+            color: #08345b;
+            border-bottom: 1px solid gray;
+        }
+        #actorsDiv{
+            font-family: sans-serif;
+            font-size: 20px;
+            font-weight: normal;
+            line-height: 25px;
+            padding: 15px;
+            color: #08345b;
+            border-bottom: 1px solid gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="topDiv">
+        <h1>Movie Finder Hub</h1>
+        <input type="text" name="" id="search" placeholder="enter name here " oninput="deBounce(searchMovie,1000)">
+     <div id="movieDiv">
+
+     </div>
+    </div>
+
+    <!-- show content div -->
+    <div id="showContentDiv">
+        <!-- Defualt Search -->
+       <img src="https://img1.hotstarext.com/image/upload/f_auto,t_web_vl_3x/sources/r1/cms/prod/726/580726-v" alt="">
+
+        <div id="movieContent">
+           <p >House Full 2
+           </p>
+
+            <div id="movieText">
+                <h3>2012
+                </h3>
+                <h3>139 min</h3>
+                 <h3>8.9</h3>
+                  <h3>Sky fie</h3>
+                  <h3>Hindi English</h3>
+                 
+            </div>
+            <div id="aboutMovie">
+               Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Dolores veritatis numquam, eius vero, a alias nam iusto
+                 praesentium itaque ut error quaerat nobis autem beatae obcaecati
+                  quam similique iste ipsum.
+           </div>
+           <div id="actorsDiv">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+               Voluptas quasi beatae quibusdam debitis possimus velit quam ad 
+               dolores sed consequuntur minus eligendi perspiciatis excepturi harum,
+                molestiae neque. Molestias, totam illo.</div>
+        </div>
+
+
+    </div>
+</body>
+</html>
+<script>
+    let movie_Waiting;
+
+    async function searchMovie(){
+        let input= document.querySelector("#search").value;
+       try{
+           if(input.length<=2){
+               return false;
+           }
+        let url=`https://www.omdbapi.com/? &apikey=36c09c17&s=${input}`;
+           let request= await fetch(url);
+           var response= await request.json();
+           var movieList= response.Search;
+           displayMovieList(movieList);
+           console.log(response);
+
+       }
+       catch(err){
+           console.log(err)
+       }
+    }
+
+    function displayMovieList(dataArr){
+        var parent= document.querySelector("#movieDiv");
+        parent.innerHTML="";
+          if(dataArr==undefined){
+              return false;
+          }
+        dataArr.map(function(elem){
+
+            let title = document.createElement("p");
+            title.textContent=elem.Title;
+             title.addEventListener("click",function(){
+                 let movieTitle= title.innerText;
+                 getData(movieTitle);
+                  
+             })
+            parent.append(title);
+        })
+    }
+    function deBounce(fun,delay){
+       if(movie_Waiting){
+           clearTimeout(movie_Waiting);
+       }
+
+       movie_Waiting= setTimeout(function(){
+             fun();
+        },delay);
+    }
+
+    // code for showing movies on clicking any list item 
+    async function getData(inputStr){
+        // var inputStr= document.querySelector("#search").value;
+        try{
+        let url=`https://www.omdbapi.com/?t=${inputStr} &apikey=36c09c17`;
+        var request= await fetch(url);
+        var response= await request.json();
+        displayMovie(response);
+        console.log(response)
+     
+         
+        }
+        catch(err){
+           console.log(err)
+        }
+        
+    }
+
+    function displayMovie(response){
+       let parentDiv= document.querySelector("#showContentDiv");
+       parentDiv.innerHTML="";
+      if(response.Poster!=undefined){
+           // img for the movie
+        var movieImg=document.createElement("img");
+         movieImg.src= response.Poster;
+        // movie content div
+        var movieContentDiv= document.createElement("div");
+        movieContentDiv.setAttribute("id","movieContent");
+        // text div which content all about the movie
+        var movieTextDiv=document.createElement("div");
+        movieTextDiv.setAttribute("id","movieText");
+        // creating move name 
+        var movieName= document.createElement("p");
+         movieName.textContent=response.Title;
+           // creating move year
+        var year=document.createElement("h3");
+         year.textContent=response.Year;
+           // creating  total watch time
+        var hours=document.createElement("h3");
+        hours.textContent=response.Runtime;
+          // creating rating 
+        var rating=document.createElement("h3");
+        rating.textContent=Number(response.imdbRating);
+        var ratingNew=Number(response.imdbRating);
+        // condition of rating which shows given action
+        if(ratingNew>=8.5){
+           var tag= document.createElement("h3");
+           tag.setAttribute("id","tag");
+            tag.textContent= "Recommended";
+             movieContentDiv.append(tag);
+        }
+        // creating category element
+        var category=document.createElement("h3");
+        category.textContent=response.Genre;
+        // creating language element
+        var language=document.createElement("h3");
+        language.textContent=response.Language;
+        // appending all the text in movieTextDiv
+        movieTextDiv.append(year,hours,rating,category,language)
+        // creating movie descreption div
+        var movieDesc=document.createElement("div");
+        movieDesc.textContent="This Movie is About "+response.Plot;
+        movieDesc.setAttribute("id","aboutMovie");
+        // creating actors name div
+        var actorsDiv=document.createElement("div");
+        actorsDiv.textContent="Actors name are     "+response.Actors;
+        actorsDiv.setAttribute("id","actorsDiv");
+        // appending all the things in movieContentDiv
+        movieContentDiv.append(movieName,movieTextDiv,movieDesc,actorsDiv);
+        // appending all the things in parent div
+        parentDiv.append(movieImg,movieContentDiv);
+      }
+      else{
+        parentDiv.innerHTML="";
+        let img= document.createElement("img");
+        img.src="https://miro.medium.com/max/1400/1*zBFBJktPD3_z0S_35kO5Hg.gif";
+        img.style.width="100%";
+        img.style.height="100%";
+        parentDiv.append(img);
+      }
+    }
+
+</script>
